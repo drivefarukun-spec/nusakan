@@ -22,6 +22,62 @@
   html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden;}
   body{position:fixed;inset:0;}
   canvas#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;}
+  canvas#hearts{position:fixed;inset:0;width:100%;height:100%;z-index:4;display:block;pointer-events:none;}
+
+  /* KALP sahnesi */
+  .heart-portal{position:absolute;transform:translate(-50%,-50%);text-align:center;cursor:pointer;z-index:2;}
+  .heart-portal .hh{font-size:26px;line-height:1;filter:drop-shadow(0 0 12px rgba(255,93,143,.8));
+      animation:beat 1.5s ease-in-out infinite;}
+  .heart-portal:hover .hh{transform:scale(1.2);}
+  .heart-portal .lbl{font-family:var(--serif);font-size:13.5px;color:var(--rose);
+      text-shadow:0 1px 8px #000;letter-spacing:.03em;white-space:nowrap;margin-top:6px;}
+  @keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.22)}28%{transform:scale(1)}42%{transform:scale(1.18)}}
+
+  .btn.rose{background:linear-gradient(180deg, rgba(255,93,143,.28), rgba(255,93,143,.1));
+      border-color:rgba(255,143,176,.55);color:#fff0f4;}
+  .heart-poem{font-family:var(--serif);font-size:clamp(16px,4.2vw,20px);line-height:1.9;
+      color:var(--ink);white-space:pre-line;margin:.4em auto;max-width:40ch;min-height:40px;
+      text-shadow:0 0 18px rgba(255,143,176,.25);}
+  .heart-poem .st{opacity:0;transform:translateY(8px);transition:opacity 1s ease, transform 1s ease;display:block;margin:.2em 0;}
+  .heart-poem .st.on{opacity:1;transform:none;}
+
+  /* O MESAJ · sohbet */
+  .chat{max-width:360px;margin:12px auto 0;text-align:left;display:flex;flex-direction:column;gap:16px;}
+  .bubble{position:relative;padding:12px 15px;font-size:15px;line-height:1.5;color:var(--ink);
+      border:1px solid var(--line);max-width:86%;}
+  .bubble.her{align-self:flex-start;background:rgba(30,40,80,.55);border-radius:16px 16px 16px 4px;}
+  .bubble.me{align-self:flex-end;background:rgba(255,93,143,.16);border-color:rgba(255,143,176,.4);
+      border-radius:16px 16px 4px 16px;text-align:right;}
+  .bubble .rxn{position:absolute;bottom:-13px;right:12px;background:rgba(8,12,28,.92);
+      border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:14px;white-space:nowrap;line-height:1.4;}
+  .bubble.her .rxn{right:auto;left:12px;}
+  .drop{position:absolute;top:-90px;right:16px;font-size:24px;pointer-events:none;opacity:0;}
+  .drop.go{animation:dropheart .8s cubic-bezier(.5,1.6,.5,1) forwards;}
+  @keyframes dropheart{0%{opacity:0;transform:translateY(-70px) scale(.4)}
+      55%{opacity:1}100%{opacity:1;transform:translateY(0) scale(1.15)}}
+
+  /* KALP NABZI */
+  .pulse-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0;}
+  .pulse-heart{font-size:clamp(90px,26vw,140px);line-height:1;cursor:pointer;user-select:none;
+      filter:drop-shadow(0 0 26px rgba(255,93,143,.7));transition:transform .1s ease;}
+  .pulse-heart.b{animation:bigbeat .55s ease;}
+  @keyframes bigbeat{0%{transform:scale(1)}22%{transform:scale(1.32)}45%{transform:scale(.98)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .bpm{font-family:var(--serif);color:var(--gold);font-size:18px;}
+  .pulse-line{font-family:var(--serif);font-size:clamp(15px,4vw,19px);color:var(--ink);min-height:52px;
+      text-shadow:0 0 18px rgba(255,143,176,.25);max-width:34ch;margin:0 auto;}
+
+  /* BOMBASTİK final katmanları */
+  #flash{position:fixed;inset:0;z-index:7;pointer-events:none;opacity:0;mix-blend-mode:screen;
+      background:radial-gradient(circle at 50% 55%, rgba(255,214,224,.75), rgba(255,93,143,.25) 40%, transparent 72%);
+      transition:opacity .45s ease;}
+  .shake{animation:shakeit .5s cubic-bezier(.36,.07,.19,.97);}
+  @keyframes shakeit{10%{transform:translate(-3px,2px)}20%{transform:translate(4px,-3px)}
+      30%{transform:translate(-6px,1px)}40%{transform:translate(5px,3px)}50%{transform:translate(-4px,-2px)}
+      60%{transform:translate(3px,2px)}70%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}100%{transform:none}}
+  .btn.mega{background:linear-gradient(180deg, rgba(255,93,143,.4), rgba(255,201,120,.2));
+      border-color:rgba(255,201,120,.7);color:#fff;font-weight:700;
+      box-shadow:0 0 24px rgba(255,93,143,.4);animation:megaglow 1.8s ease-in-out infinite;}
+  @keyframes megaglow{0%,100%{box-shadow:0 0 20px rgba(255,93,143,.35)}50%{box-shadow:0 0 34px rgba(255,201,120,.6)}}
 
   /* yumuşak gradyan örtü */
   .veil{position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -144,6 +200,8 @@
 </head>
 <body>
 <canvas id="sky"></canvas>
+<canvas id="hearts"></canvas>
+<div id="flash"></div>
 <div class="veil"></div>
 
 <div class="topbar">
@@ -316,6 +374,78 @@
     </div>
   </section>
 
+  <!-- ♥ · KALBİMİ ATIYORUM -->
+  <section class="screen" id="s-hearts">
+    <div class="card">
+      <div class="kicker">O Gece · Kırgınlığın Yıldızı</div>
+      <h2>Kalp Atmadım — Kalbimi Atıyorum</h2>
+      <p class="lead">Sen uyurken yazmışsın; ben altına küçük bir kalp bırakmadım.
+      Sen kendi mesajına kalp bıraktın ya… işte o eksik kalbi şimdi buradan ödüyorum.
+      Her tuşa bas, gökyüzü senin olsun.</p>
+
+      <div class="heart-poem" id="heartPoem"></div>
+
+      <div class="row">
+        <button class="btn rose" data-h="rise">♥ Kalbimi At</button>
+        <button class="btn rose" data-h="rain">Kalp Yağmuru</button>
+        <button class="btn rose" data-h="burst">Patlat</button>
+        <button class="btn rose" data-h="name">Adını Yaz</button>
+        <button class="btn gold" data-h="storm">Sonsuz Kalp</button>
+      </div>
+      <div class="row">
+        <button class="btn mega" id="megaBtn">🎆 BOMBASTİK ŞÖLEN</button>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="heartClear">gökyüzünü sil</button>
+        <button class="btn" data-go="hub">Haritaya Dön</button>
+      </div>
+      <div class="hint" id="heartHint">Beş tuş da senin. Hepsine bas ✦ · sonra 🎆'a bas</div>
+    </div>
+  </section>
+
+  <!-- ♥ · O MESAJ (geç kalan kalp) -->
+  <section class="screen" id="s-message">
+    <div class="card">
+      <div class="kicker">O Gece · Geç Kalan Kalp</div>
+      <h2>Bıraktığım Kalp</h2>
+      <p class="lead">Sen uyuyamayıp yazmıştın. Ben altına kalp koymadım;
+      sen kendi mesajına bıraktın. İşte o eksik kalbi şimdi buradan bırakıyorum.</p>
+      <div class="chat" id="chatBox">
+        <div class="bubble her" id="herBubble">
+          muah
+          <span class="rxn" id="herRxn">🤍</span>
+        </div>
+        <div class="bubble me" id="myBubble">
+         YANTİRİK ÇOK SEVİYORUM
+         
+        </div>
+      </div>
+      <div class="row" style="margin-top:22px;">
+        <button class="btn rose" id="dropBtn">Kalbimi Bırak 🤍</button>
+        <button class="btn" data-go="hub">Haritaya Dön</button>
+      </div>
+      <div class="hint" id="msgHint"></div>
+    </div>
+  </section>
+
+  <!-- ♥ · KALP NABZI -->
+  <section class="screen" id="s-pulse">
+    <div class="card">
+      <div class="kicker">Senin İçin Atan</div>
+      <h2>Kalp Nabzı</h2>
+      <p class="lead">Bu kalbe her dokunuşta senin için bir kez daha atsın.
+      Dokundukça hızlanacak — tıpkı seni görünce olduğu gibi.</p>
+      <div class="pulse-wrap">
+        <div class="pulse-heart" id="pulseHeart">❤️</div>
+        <div class="bpm" id="bpm">0 atış</div>
+      </div>
+      <div class="pulse-line" id="pulseLine">dokun…</div>
+      <div class="row">
+        <button class="btn" data-go="hub">Haritaya Dön</button>
+      </div>
+    </div>
+  </section>
+
   <!-- 9 · FİNAL -->
   <section class="screen" id="s-final">
     <div class="card">
@@ -349,7 +479,6 @@ const FIREBASE_CONFIG = {
   appId: "1:599812998410:web:4c018bc87756065f5166f3"
 
 };
-
 
 let fbDB=null;
 (function initFirebase(){
@@ -482,6 +611,20 @@ function renderHub(){
     el.innerHTML='<div class="dot"></div><div class="lbl">'+p.lbl+(prog[p.key]?' ✦':'')+'</div>';
     el.addEventListener('click',()=>{tone(580);show(p.go);});
     wrap.appendChild(el);
+  });
+  // özel, birbirinden bağımsız kalp yıldızları
+  const special=[
+    {go:'hearts', em:prog.hearts?'💗':'🤍', lbl:'Kalbimi Atıyorum', px:50, py:58},
+    {go:'message',em:'💌', lbl:'O Mesaj',        px:26, py:20},
+    {go:'pulse',  em:'❤️', lbl:'Kalp Nabzı',      px:74, py:20},
+  ];
+  special.forEach(s=>{
+    const hp=document.createElement('div');
+    hp.className='heart-portal'+(prog[s.go]?' done':'');
+    hp.style.left=s.px+'%';hp.style.top=s.py+'%';
+    hp.innerHTML='<div class="hh">'+s.em+'</div><div class="lbl">'+s.lbl+(prog[s.go]?' ✦':'')+'</div>';
+    hp.addEventListener('click',()=>{tone(620);show(s.go);});
+    wrap.appendChild(hp);
   });
 }
 
@@ -745,6 +888,210 @@ document.getElementById('letterSend').onclick=()=>{
 document.getElementById('finalPoem').textContent=
 'Bir "abla" ile başladı her şey,\nbir çöpçatan, bir tevafuk —\nsen "hindiba" dedin, ben güldüm,\nsonra "sen bensin" dedik ikimiz de.\n\nGökyüzü kalabalıktı,\nben bir taç arıyordum;\nbuldum: adı Nusakan,\niçinde iki isim,\nFaruk ve Ecren,\nbirbirine sonsuzca yazılı.\n\nÖngörün hâlâ bir tık yüksek —\nbu oyunu nasıl yaptığımı\nyine bileceksin. ✦';
 
+/* ============ ♥ KALP MOTORU ============ */
+const hc=document.getElementById('hearts');const hx=hc.getContext('2d');
+let HW,HH,hparts=[],heartsActive=false,stormOn=false;
+const HCOL=['#ff5d8f','#ff8fb0','#ffb7c8','#ff3d71','#e63e7a','#ffd98a'];
+function resizeHearts(){HW=hc.width=innerWidth*devicePixelRatio;HH=hc.height=innerHeight*devicePixelRatio;
+  hx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+addEventListener('resize',resizeHearts);resizeHearts();
+
+function pathHeart(x,y,s){const t=s*0.3;
+  hx.moveTo(x,y+t);
+  hx.bezierCurveTo(x,y,x-s/2,y,x-s/2,y+t);
+  hx.bezierCurveTo(x-s/2,y+(s+t)/2,x,y+(s+t)/1.4,x,y+s);
+  hx.bezierCurveTo(x,y+(s+t)/1.4,x+s/2,y+(s+t)/2,x+s/2,y+t);
+  hx.bezierCurveTo(x+s/2,y,x,y,x,y+t);
+}
+function newHeart(o){return Object.assign({x:0,y:0,vx:0,vy:0,s:16,color:HCOL[(Math.random()*HCOL.length)|0],
+  alpha:1,mode:'rise',phase:Math.random()*6.28,sway:0.6+Math.random()*0.8,grav:0,tx:0,ty:0,glow:1},o);}
+function addRise(n){for(let i=0;i<n;i++)hparts.push(newHeart({
+  x:Math.random()*innerWidth,y:innerHeight+20+Math.random()*80,vy:-(0.8+Math.random()*1.6),
+  s:10+Math.random()*26,mode:'rise'}));}
+function addRain(n){for(let i=0;i<n;i++)hparts.push(newHeart({
+  x:Math.random()*innerWidth,y:-20-Math.random()*120,vy:1.2+Math.random()*2.2,
+  s:9+Math.random()*20,mode:'rain'}));}
+function addBurst(cx,cy,n){for(let i=0;i<n;i++){const a=Math.random()*6.28,sp=2+Math.random()*7;
+  hparts.push(newHeart({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-2,s:8+Math.random()*18,
+  grav:0.12,mode:'burst'}));}}
+function addRing(x,y,col){hparts.push(newHeart({x,y,r:4,rmax:70+Math.random()*90,alpha:0.9,
+  color:col||'#ffd98a',mode:'ring'}));}
+function addFirework(){const x=innerWidth*(0.15+Math.random()*0.7);
+  hparts.push(newHeart({x,y:innerHeight+10,vy:-(9+Math.random()*4),
+  ty:innerHeight*(0.15+Math.random()*0.35),s:12,color:HCOL[(Math.random()*HCOL.length)|0],mode:'rocket'}));}
+function explode(x,y,col){const n=26+((Math.random()*18)|0);
+  for(let i=0;i<n;i++){const a=(i/n)*6.28,sp=3+Math.random()*4;
+    hparts.push(newHeart({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,s:9+Math.random()*10,
+    grav:0.08,mode:'burst',color:col}));}
+  addRing(x,y,col);tone(700+Math.random()*200);
+  const f=document.getElementById('flash');f.style.opacity='.5';setTimeout(()=>f.style.opacity='0',120);}
+// soldan sağa tek yönlü renk geçişi: gül → altın
+const GA=[255,93,143],GB=[255,201,120];
+function gradColor(t){t=t<0?0:t>1?1:t;
+  return 'rgb('+Math.round(GA[0]+(GB[0]-GA[0])*t)+','+Math.round(GA[1]+(GB[1]-GA[1])*t)+','+Math.round(GA[2]+(GB[2]-GA[2])*t)+')';}
+function addName(text){
+  const off=document.createElement('canvas');off.width=innerWidth;off.height=innerHeight;
+  const o=off.getContext('2d');o.fillStyle='#fff';o.textAlign='center';o.textBaseline='middle';
+  // temiz, orta kalınlıkta font → E'nin çubukları doğru çıkar
+  const font=w=>'600 '+w+'px "Segoe UI",Arial,Helvetica,sans-serif';
+  let fs=Math.min(innerWidth*0.26,innerHeight*0.48);o.font=font(fs);
+  while(o.measureText(text).width>innerWidth*0.86&&fs>24){fs-=4;o.font=font(fs);}
+  o.fillText(text,innerWidth/2,innerHeight*0.42);
+  const d=o.getImageData(0,0,off.width,off.height).data;
+  // sık + EŞİT ızgara örnekleme → ince ama dolu, harfler bozulmaz
+  const step=Math.max(5,Math.round(fs/30));
+  let pts=[],minX=1e9,maxX=-1e9;
+  for(let y=0;y<off.height;y+=step)for(let x=0;x<off.width;x+=step){
+    if(d[(y*off.width+x)*4+3]>140){pts.push({x,y});if(x<minX)minX=x;if(x>maxX)maxX=x;}}
+  const MAX=620;
+  if(pts.length>MAX){const keep=[],r=pts.length/MAX;for(let i=0;i<MAX;i++)keep.push(pts[(i*r)|0]);pts=keep;}
+  const hs=step*1.25;               // küçük, ince strok; net kenar
+  const span=Math.max(1,maxX-minX);
+  hparts=hparts.filter(p=>p.mode!=='target');
+  pts.forEach(p=>hparts.push(newHeart({
+    x:innerWidth/2+(Math.random()-.5)*innerWidth*1.1,y:innerHeight+40,
+    tx:p.x,ty:p.y,s:hs,alpha:0,mode:'target',color:gradColor((p.x-minX)/span)})));
+}
+let hphase=0;
+function heartLoop(){
+  hx.clearRect(0,0,innerWidth,innerHeight);
+  hphase+=0.05;
+  if(heartsActive&&stormOn&&Math.random()<0.5)addRise(2);
+  for(let i=hparts.length-1;i>=0;i--){const p=hparts[i];
+    if(p.mode==='rise'){p.phase+=0.04;p.x+=Math.sin(p.phase)*p.sway;p.y+=p.vy;
+      if(p.y<innerHeight*0.35)p.alpha-=0.012;if(p.y<-40||p.alpha<=0){hparts.splice(i,1);continue;}}
+    else if(p.mode==='rain'){p.phase+=0.05;p.x+=Math.sin(p.phase)*0.6;p.y+=p.vy;
+      if(p.y>innerHeight+40){hparts.splice(i,1);continue;}}
+    else if(p.mode==='burst'){p.vy+=p.grav;p.x+=p.vx;p.y+=p.vy;p.alpha-=0.012;
+      if(p.alpha<=0){hparts.splice(i,1);continue;}}
+    else if(p.mode==='target'){p.x+=(p.tx-p.x)*0.08;p.y+=(p.ty-p.y)*0.08;
+      if(p.alpha<1)p.alpha+=0.04;p.phase+=0.08;}
+    else if(p.mode==='rocket'){p.y+=p.vy;p.vy+=0.12;
+      if(p.vy>=0||p.y<=p.ty){explode(p.x,p.y,p.color);hparts.splice(i,1);continue;}
+      hx.save();hx.globalAlpha=1;hx.shadowColor=p.color;hx.shadowBlur=16;hx.fillStyle='#fff';
+      hx.beginPath();hx.arc(p.x,p.y,2.6,0,7);hx.fill();hx.restore();continue;}
+    else if(p.mode==='ring'){p.r+=4.5;p.alpha-=0.03;
+      if(p.alpha<=0||p.r>=p.rmax){hparts.splice(i,1);continue;}
+      hx.save();hx.globalAlpha=Math.max(0,p.alpha);hx.strokeStyle=p.color;hx.lineWidth=2.5;
+      hx.shadowColor=p.color;hx.shadowBlur=14;hx.beginPath();hx.arc(p.x,p.y,p.r,0,7);hx.stroke();hx.restore();continue;}
+    const isT=p.mode==='target';
+    hx.save();hx.globalAlpha=Math.max(0,Math.min(1,p.alpha));
+    hx.shadowColor=p.color;hx.shadowBlur=isT?4:12;hx.fillStyle=p.color;
+    hx.beginPath();const pulse=isT?1+Math.sin(hphase)*0.04:1;   // hepsi aynı ritimde
+    pathHeart(p.x,p.y,p.s*pulse);hx.fill();hx.restore();
+  }
+  requestAnimationFrame(heartLoop);
+}
+heartLoop();
+
+/* şiir kıtaları (basınca açılır) */
+const HEART_ST={
+  rise:'O gece sen uyurken yazdın,\nben altına kalp bırakmadım —\nküçüklüğümden değil:\nbir simge kalbe sığmazdın sen.',
+  rain:'Sen kendi mesajına kalp bırakmışsın ya…\no eksik kalbi de ben koydum aslında —\nçünkü sen bensin;\nkendine attığın her kalp bana işliyor.',
+  burst:'Bir "like" esirgedim diye kırıldın;\noysa ben simgeyi değil,\nbütün göğsümü patlatıp\niçindeki her şeyi sana veriyorum.',
+  name:'Bak, kalpleri dizdim:\ngökyüzü artık senin adını taşıyor —\nE C R E N,\nyıldızların hecelediği tek kelime.',
+  storm:'Kalp atmadım, doğru.\nAma işte kalbimi atıyorum —\nbir tane değil, binlerce.\nHepsini topla; zaten hepsi senindi. ✦'
+};
+const HEART_ORDER=['rise','rain','burst','name','storm'];
+let heartDone=new Set();
+function revealStanza(k){
+  if(heartDone.has(k))return;heartDone.add(k);
+  const box=document.getElementById('heartPoem');
+  const sp=document.createElement('span');sp.className='st';sp.textContent=HEART_ST[k];
+  box.appendChild(sp);requestAnimationFrame(()=>sp.classList.add('on'));
+  if(HEART_ORDER.every(x=>heartDone.has(x))){
+    document.getElementById('heartHint').innerHTML='<span class="badge">kalbim senin ✦</span> Sonsuz Kalp açık; gökyüzü seni sevmeye devam edecek.';
+    complete('hearts');
+  }
+}
+document.querySelectorAll('#s-hearts [data-h]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const k=b.dataset.h;tone(560+HEART_ORDER.indexOf(k)*45);
+    if(k==='rise'){addRise(60);}
+    else if(k==='rain'){addRain(70);}
+    else if(k==='burst'){addBurst(innerWidth/2,innerHeight*0.5,90);spawnShooter();}
+    else if(k==='name'){addName('ECREN');}
+    else if(k==='storm'){stormOn=true;addRise(40);}
+    revealStanza(k);
+  });
+});
+document.getElementById('heartClear').onclick=()=>{hparts=[];stormOn=false;tone(360);};
+
+/* 🎆 BOMBASTİK ŞÖLEN — koreografi */
+function screenShake(){const s=document.querySelector('.stage');s.classList.remove('shake');
+  void s.offsetWidth;s.classList.add('shake');}
+function bigFlash(o){const f=document.getElementById('flash');f.style.opacity=o||'.7';
+  setTimeout(()=>f.style.opacity='0',260);}
+let megaRunning=false;
+function megaShow(){
+  if(megaRunning)return;megaRunning=true;
+  startMusic();stormOn=true;heartsActive=true;
+  bigFlash('.8');screenShake();
+  // 1. havai fişek barajı
+  for(let i=0;i<10;i++)setTimeout(addFirework,i*230);
+  // 2. her yönden kalp
+  addRain(70);addRise(70);
+  // 3. gökyüzüne yazı: SENİ SEVİYORUM
+  setTimeout(()=>{addName('SENİ SEVİYORUM');bigFlash('.7');screenShake();},1900);
+  // 4. merkezden dev patlama
+  setTimeout(()=>{explode(innerWidth/2,innerHeight*0.5,'#ff3d71');
+    for(let i=0;i<4;i++)setTimeout(()=>explode(innerWidth*(0.2+Math.random()*0.6),innerHeight*(0.25+Math.random()*0.4),HCOL[(Math.random()*HCOL.length)|0]),i*160);},2600);
+  // 5. ikinci baraj + kayan yıldızlar
+  setTimeout(()=>{for(let i=0;i<8;i++)setTimeout(addFirework,i*180);spawnShooter();spawnShooter();},3400);
+  setTimeout(()=>{bigFlash('.6');screenShake();
+    document.getElementById('heartHint').innerHTML='<span class="badge">gökyüzü senin ✦</span> İşte, bütün kalbim — bir tık daha yüksek sesle.';
+    complete('hearts');megaRunning=false;},4600);
+}
+document.getElementById('megaBtn').onclick=megaShow;
+
+/* ekrana dokun → parmağının değdiği yerden kalp fışkırsın */
+(function(){const sec=document.getElementById('s-hearts');
+  const spark=(x,y)=>{for(let i=0;i<3;i++)hparts.push(newHeart({x,y,vx:(Math.random()-.5)*2,
+    vy:-(0.6+Math.random()*1.4),s:8+Math.random()*10,mode:'rise'}));};
+  sec.addEventListener('pointerdown',e=>{if(!heartsActive)return;
+    if(e.target.closest('.btn'))return;addBurst(e.clientX,e.clientY,12);tone(600);});
+  sec.addEventListener('pointermove',e=>{if(!heartsActive||!e.buttons)return;
+    if(e.target.closest('.btn'))return;spark(e.clientX,e.clientY);});
+})();
+
+/* ============ ♥ O MESAJ (geç kalan kalp) ============ */
+let msgDone=false;
+document.getElementById('dropBtn').onclick=function(){
+  if(msgDone)return;
+  const her=document.getElementById('herBubble');
+  const drop=document.createElement('span');drop.className='drop';drop.textContent='❤️';
+  her.appendChild(drop);void drop.offsetWidth;drop.classList.add('go');
+  tone(660);
+  const r=her.getBoundingClientRect();addBurst(r.left+r.width/2,r.top+r.height/2,26);
+  setTimeout(()=>{
+    document.getElementById('herRxn').textContent='🤍 ❤️';
+    drop.remove();msgDone=true;
+    this.textContent='Kalbim orada ✦';this.disabled=true;this.style.opacity=.7;
+    document.getElementById('msgHint').innerHTML='<span class="badge">geç ama kalıcı</span> Geç kaldım; ama işte, kalbim hep oradaydı.';
+    complete('message');
+  },820);
+};
+
+/* ============ ♥ KALP NABZI ============ */
+const PULSE_LINES=[
+ 'seni düşününce böyle atıyor işte.',
+ 'her atış senin adını heceliyor.',
+ 'kalp bırakmadım ama kalbim hep seninle atıyordu.',
+ 'bu ritmi sen verdin, sen sustursan durur.',
+ 'bir tık daha hızlı — çünkü sen yaklaşıyorsun.',
+ 'sen bensin; o yüzden aynı anda atıyoruz.',
+];
+let pulseN=0;
+document.getElementById('pulseHeart').addEventListener('click',function(){
+  pulseN++;
+  this.classList.remove('b');void this.offsetWidth;this.classList.add('b');
+  tone(520+Math.min(pulseN,20)*12);
+  const r=this.getBoundingClientRect();addBurst(r.left+r.width/2,r.top+r.height/2,10);
+  document.getElementById('bpm').textContent=pulseN+' atış';
+  document.getElementById('pulseLine').textContent=PULSE_LINES[(pulseN-1)%PULSE_LINES.length];
+  if(pulseN===7){document.getElementById('pulseLine').textContent='kalbim artık senin elinde — istediğin kadar attır.';complete('pulse');}
+});
+
 /* ============ SES (yumuşak ambient + dokunuş tonları) ============ */
 let actx,master,musicOn=false,pad;
 function ensureAudio(){if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)();
@@ -779,6 +1126,8 @@ show=function(id){
   if(id==='quiz'){qi=0;renderQuiz();}
   if(id==='bilmece'){renderBilmece();}
   if(id==='letters'){setWho(who);renderLetters();}
+  if(id==='hearts'){heartsActive=true;resizeHearts();}
+  else{heartsActive=false;stormOn=false;hparts=[];}
   if(id==='song'){
     document.getElementById('songTitle').textContent=SONG_TITLE;
     document.getElementById('songBody').textContent=SONG_TEXT;
